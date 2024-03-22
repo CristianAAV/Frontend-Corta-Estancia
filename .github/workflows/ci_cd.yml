@@ -1,0 +1,54 @@
+name: CI
+
+# Controls when the action will run. 
+on:
+  push:
+    branches: [ 'feature**', 'fix**' ]
+  pull_request:
+    branches: [ 'feature**', 'fix**' ]
+    
+
+jobs:
+  initial-setup:
+    name: Initial setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install
+    - run: npm run build
+  merges:
+    needs: initial-setup
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, 'Complete') }}
+    steps:
+    - name: Merge feature -> develop
+      uses: tukasz/direct-merge-action@master
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        source-branch: ${{ github.ref }}
+        target-branch: develop
+    - name: Checkout
+      uses: actions/checkout@v2    
+    - name: Create branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git checkout -b release
+        git push -f -u origin release
+    - name: Mege release -> main
+      uses: tukasz/direct-merge-action@master
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        source-branch: release
+        target-branch: main

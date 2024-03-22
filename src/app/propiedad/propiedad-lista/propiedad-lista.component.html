@@ -1,0 +1,122 @@
+<app-encabezado></app-encabezado>
+<h1>Propiedades</h1>
+
+Propiedades <button type="button" class="btn btn-warning" (click)="crearPropiedad()"><i
+    class="bi bi-plus-circle"></i></button>
+<div>
+  <table class="table" border="0">
+    <thead>
+      <th>Nombre</th>
+      <th>Acciones</th>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let propiedad of propiedades">
+        <tr>
+          <td><a href="/propiedades/{{propiedad.id}}/reservas">{{propiedad.nombre_propiedad}}</a></td>
+          <td>
+            <button *ngIf="!ocultarBotones == true" [disabled]="false" type="button" class="btn btn-primary"
+              (click)="editarPropiedad(propiedad.id)"><i class="bi bi-pencil"></i></button>&nbsp;
+            <button *ngIf="!ocultarBotones == true" [disabled]="false" type="button" class="btn btn-danger"
+              (click)="borrarPropiedad(propiedad.id)"><i class="bi bi-trash"></i></button>&nbsp;
+            <button id="listarmantenimientos" [disabled]="false" type="button" class="btn btn-info"
+              (click)="obtenerMantenimientos(propiedad.id)"><i class="bi bi-tools"></i></button>&nbsp;
+            <button [disabled]="false" type="button" class="btn btn-warning" (click)="movimientos(propiedad.id)"><i
+                class="bi bi-cash-coin"></i></button>&nbsp;
+            <button [disabled]="false" type="button" class="btn btn-success obtener-detalles-btn"
+              (click)="obtenerDetallesPorpiedad(propiedad.id)"><i class="bi bi-eye"></i></button>&nbsp;
+            <button [disabled]="false" type="button" class="btn btn-info obtener-detalles-btn"
+              (click)="obtenerReporteMovimientos(propiedad.id)"><i class="bi bi-file-earmark-spreadsheet"></i></button>&nbsp;
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            <div *ngIf="propiedadSeleccionada == propiedad.id && mostrarDetallesPropiedad" class="detalles-movimiento card p-3">
+              <h4 class="card-title">Detalles de la propiedad</h4>
+              <div class="card-text">
+                <p>Id: {{ propiedad.id }}</p>
+                <p>Nombre: {{ propiedad.nombre_propiedad }}</p>
+                <p>Direccion: {{ propiedad.direccion }}</p>
+                <p>Nombre de propietario: {{ propiedad.id_propietario }}</p>
+                <p>Nombre de contacto: {{ propiedad.numero_contacto }}</p>
+                <p>KPI: {{ propiedadKpi && propiedadKpi.valor }}</p>
+              </div>
+            </div>
+            <div *ngIf="mostrarReportePropiedadSeleccionada == propiedad.id  && mostraReporteMovimientos"
+              class="detalles-movimiento card p-3">
+              <h4 class="card-title">Ingresos</h4>
+              <div class="row">
+                <div *ngIf="ingresos.length > 0; else elseBlock">
+                  <table class="table" border="0">
+                    <thead>
+                      <th>Fecha</th>
+                      <th>Categoria</th>
+                      <th>Descripcion</th>
+                      <th>Propiedad</th>
+                      <th>Tipo de movimiento</th>
+                      <th>Valor</th>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let ingreso of ingresos">
+                        <tr>
+                          <td>{{ingreso.fecha}}</td>
+                          <td>{{ingreso.categoria}}</td>
+                          <td>{{ingreso.descripcion}}</td>
+                          <td>{{ingreso.id_propiedad}}</td>
+                          <td>{{ingreso.tipo_movimiento }}</td>
+                          <td>{{ingreso.valor}}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+                <ng-template #elseBlock>
+                  <div style="text-align:center;">
+                    Esta propiedad no tiene ingresos
+                  </div>
+                </ng-template>
+              </div>
+              <h4 class="card-title">Egresos</h4>
+              <div class="row">
+                <div *ngIf="egresos.length > 0; else elseBlock">
+                  <table class="table" border="0">
+                    <thead>
+                      <th>Fecha</th>
+                      <th>Categoria</th>
+                      <th>Descripcion</th>
+                      <th>Propiedad</th>
+                      <th>Tipo de movimiento</th>
+                      <th>Valor</th>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let egreso of egresos">
+                        <tr>
+                          <td>{{egreso.fecha}}</td>
+                          <td>{{egreso.categoria}}</td>
+                          <td>{{egreso.descripcion}}</td>
+                          <td>{{egreso.id_propiedad}}</td>
+                          <td>{{egreso.tipo_movimiento }}</td>
+                          <td>{{egreso.valor}}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+                <ng-template #elseBlock>
+                  <div style="text-align:center;">
+                    Esta propiedad no tiene egresos
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Tabla de Listar Mantenimientos -->
+        <td colspan="5" *ngIf="verMantenimientos">
+          <app-mantenimiento-lista [idPropiedadSeleccionada]="propiedad.id"> </app-mantenimiento-lista>
+          <!-- Fin Tabla de Listar Mantenimientos -->
+
+      </ng-container>
+    </tbody>
+  </table>
+</div>

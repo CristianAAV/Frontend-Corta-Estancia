@@ -1,0 +1,116 @@
+<app-encabezado></app-encabezado>
+<h1>
+  Editar Mantenimiento
+</h1>
+
+<form
+ [formGroup]="mantenimientoForm"
+ (ngSubmit)="!mantenimientoForm.invalid && editarMantenimiento(mantenimientoForm.value)"
+>
+  <div class="row">
+    <div class="col col-6">
+
+      <!--Nombre-->
+      <div class="form-group mx-sm-3 mb-2">
+        <label for="nombre">Nombre</label>
+        <input
+          novalidate
+          id="nombre"
+          class="form-control"
+          formControlName="nombre"
+          placeholder="Nombre"
+        />
+        <div
+          class="alert alert-danger alert-dismissible fade show"
+          *ngIf="
+            mantenimientoForm.get('nombre')!.hasError('required') &&
+            mantenimientoForm.get('nombre')!.touched
+          "
+        >
+          Por favor diligencie este campo
+        </div>
+      </div>
+
+
+      <!--Fecha-->
+      <div class="form-group mx-sm-3 mb-2">
+        <label for="fecha">Fecha</label>
+        <input
+          novalidate
+          type="datetime-local"
+          id="fecha"
+          class="form-control"
+          formControlName="fecha"
+          placeholder="Fecha"
+        />
+        <div
+          class="alert alert-danger alert-dismissible fade show"
+          *ngIf="
+          mantenimientoForm.get('fecha')!.hasError('required') &&
+          mantenimientoForm.get('fecha')!.touched
+          "
+        >
+          Contenido requerido
+        </div>
+      </div>
+
+      <!--Estado-->
+      <div class="form-group mx-sm-3 mb-2">
+        <label for="estado">Estado</label>
+        <select
+          formControlName="estado"
+          class="form-control">
+          <option [ngValue]="null" disabled>Elegir estado</option>
+          <option *ngFor="let estado of estados" [ngValue]="estado">{{estado}}</option>
+        </select>
+      </div>
+
+      <!--Descripcion-->
+      <div class="form-group mx-sm-3 mb-2">
+        <label for="descripcion">Descripcion</label>
+        <input
+          novalidate
+          id="descripcion"
+          class="form-control"
+          formControlName="descripcion"
+          placeholder="Descripcion"
+        />
+        <div
+          class="alert alert-danger alert-dismissible fade show"
+          *ngIf="
+            mantenimientoForm.get('descripcion')!.hasError('required') &&
+            mantenimientoForm.get('descripcion')!.touched
+          "
+        >
+          Por favor diligencie este campo
+        </div>
+      </div>
+
+      <!--Costo-->
+      <div class="form-group mx-sm-3 mb-2">
+        <label for="costo">Costo</label>
+        <input
+          novalidate
+          id="costo"
+          class="form-control"
+          formControlName="costo"
+          placeholder="Costo"
+        />
+        <div
+          class="alert alert-danger alert-dismissible fade show"
+          *ngIf="
+            mantenimientoForm.get('costo')!.hasError('required') &&
+            mantenimientoForm.get('costo')!.touched
+          "
+        >
+          Contenido requerido
+        </div>
+      </div>
+
+      
+    </div>
+  </div>
+  <br />
+  <button type="submit" class="btn btn-primary" [disabled]="!mantenimientoForm.valid">Guardar</button>&nbsp;
+  <button type="button" class="btn btn-danger ml-3" (click)="cancelarEditarMantenimiento()">Cancelar</button>
+</form>

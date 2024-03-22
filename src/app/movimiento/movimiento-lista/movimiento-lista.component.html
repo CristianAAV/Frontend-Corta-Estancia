@@ -1,0 +1,162 @@
+<app-encabezado></app-encabezado>
+<h1>Movimientos</h1>
+<div class="row">
+
+  <div class="row">
+    <h4 class="col-12 col-md-6">Ingresos
+      <button type="button" class="btn btn-warning" (click)="crearMovimiento()">
+        <i class="bi bi-plus-circle"></i>
+      </button>
+    </h4>
+    <div class="col-12 col-md-6">
+      <div class="form-group row">
+        <label for="categoria" class="col-sm-4 col-form-label">Categoria</label>
+        <div class="col-sm-8">
+          <select
+            class="custom-select"
+            [(ngModel)]="selectedIngreso"
+            (ngModelChange)="onChangeCategoriaIngresos()">
+            <option *ngFor="let categoria of categoriasIngreso" [ngValue]="categoria">{{categoria}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Ingresos -->
+  <div class="row">
+    <div *ngIf="ingresos.length > 0; else elseBlock">
+      <table class="table" border="0">
+        <thead>
+          <th>Fecha</th>
+          <th>Categoria</th>
+          <th>Descripcion</th>
+          <th>Valor</th>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let ingreso of ingresos">
+            <tr>
+              <td>{{ingreso.fecha}}</td>
+              <td>{{ingreso.categoria}}</td>
+              <td>{{ingreso.descripcion}}</td>
+              <td>{{ingreso.valor}}</td>
+              <td>
+                <div *ngIf="rol === 'ADMINISTRADOR'">
+                  <button [disabled]="false" type="button" class="btn btn-primary"
+                    (click)="editarMovimiento(ingreso.id)"><i class="bi bi-pencil"></i></button>&nbsp;
+                  <button [disabled]="false" type="button" class="btn btn-danger"
+                    (click)="borrarMovimiento(ingreso.id)"><i class="bi bi-trash"></i></button>&nbsp;
+                </div>
+                <button [disabled]="false" type="button" class="btn btn-success obtener-detalles-btn"
+                  (click)="obtenerDetallesMovimiento(ingreso.id)"><i class="bi bi-eye"></i></button>&nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                <div *ngIf="movimientoSeleccionado == ingreso.id && movimiento" class="detalles-movimiento card p-3">
+                  <h4 class="card-title">Detalles del Movimiento</h4>
+                  <div class="card-text">
+                    <p>Id: {{ movimiento.id }}</p>
+                    <p>Categoría: {{ movimiento.categoria }}</p>
+                    <p>Descripción: {{ movimiento.descripcion }}</p>
+                    <p>Fecha: {{ movimiento.fecha }}</p>
+                    <p>Propiedad: {{ movimiento.id_propiedad }}</p>
+                    <p>Tipo movimiento: {{ movimiento.tipo_movimiento }}</p>
+                    <p>Descripción: {{ movimiento.valor }}</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #elseBlock>
+      <div style="text-align:center;">
+        Esta propiedad no tiene ingresos
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="row">
+    <h4 class="col-12 col-md-6">Egresos
+      <button type="button" class="btn btn-warning" (click)="crearMovimiento()">
+        <i class="bi bi-plus-circle"></i>
+      </button>
+    </h4>
+    <div class="col-12 col-md-6">
+      <div class="form-group row">
+        <label for="categoria" class="col-sm-4 col-form-label">Categoria</label>
+        <div class="col-sm-8">
+          <select
+            class="custom-select"
+            [(ngModel)]="selectedEgreso"
+            (ngModelChange)="onChangeCategoriaEgresos()">
+            <option *ngFor="let categoria of categoriasEgreso" [ngValue]="categoria">{{categoria}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Tabla de Egresos -->
+  <div class="row">
+    <div *ngIf="egresos.length > 0; else noEgresos">
+      <table class="table" border="0">
+        <thead>
+          <th>Fecha</th>
+          <th>Categoria</th>
+          <th>Descripcion</th>
+          <th>Valor</th>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let egreso of egresos">
+            <tr>
+              <td>{{egreso.fecha}}</td>
+              <td>{{egreso.categoria}}</td>
+              <td>{{egreso.descripcion}}</td>
+              <td>{{egreso.valor}}</td>
+              <td>
+                <div *ngIf="rol === 'ADMINISTRADOR'">
+                  <button [disabled]="false" type="button" class="btn btn-primary"
+                    (click)="editarMovimiento(egreso.id)"><i class="bi bi-pencil"></i></button>&nbsp;
+                  <button [disabled]="false" type="button" class="btn btn-danger"
+                    (click)="borrarMovimiento(egreso.id)"><i class="bi bi-trash"></i></button>&nbsp;
+                </div>
+                <button [disabled]="false" type="button" class="btn btn-success obtener-detalles-btn"
+                  (click)="obtenerDetallesMovimiento(egreso.id)"><i class="bi bi-eye"></i></button>&nbsp;
+              </td>
+            </tr>
+            <!-- Detalles del Movimiento -->
+            <tr>
+              <td colspan="5">
+                <div *ngIf="movimientoSeleccionado == egreso.id && movimiento" class="detalles-movimiento card p-3">
+                  <h4 class="card-title">Detalles del Movimiento</h4>
+                  <div class="card-text">
+                    <p>Id: {{ movimiento.id }}</p>
+                    <p>Categoría: {{ movimiento.categoria }}</p>
+                    <p>Descripción: {{ movimiento.descripcion }}</p>
+                    <p>Fecha: {{ movimiento.fecha }}</p>
+                    <p>Propiedad: {{ movimiento.id_propiedad }}</p>
+                    <p>Tipo movimiento: {{ movimiento.tipo_movimiento }}</p>
+                    <p>Descripción: {{ movimiento.valor }}</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noEgresos>
+      <div style="text-align:center;">
+        Esta propiedad no tiene egresos
+      </div>
+    </ng-template>
+  </div>
+
+</div>
